@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>温馨提示 Web 版</title>
+    <style>
+        /* 简单样式，提示用户等待弹窗 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: '微软雅黑', sans-serif;
+            font-size: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>温馨提示 Web 版已启动...</h1>
+    <p>请等待弹窗弹出（可能需要点击允许弹出窗口）</p>
+
+    <script>
+        // 对应 Tkinter 代码中的窗口大小和数量
+        const WINDOW_WIDTH = 250;
+        const WINDOW_HEIGHT = 60;
+        const NUM_WINDOWS = 50;
+
+        // 异步获取随机提示和颜色数据（调用 Flask 后端 API）
+        async function fetchRandomTip() {
+            const response = await fetch('/get_tip');
+            const data = await response.json();
+            return data;
+        }
+
+        // 创建并弹出单个窗口（模拟 Tkinter 窗口）
+        async function showWarmTip() {
+            try {
+                const { tip, bg } = await fetchRandomTip();
+
+                // 获取屏幕宽高用于随机位置计算
+                const screenWidth = window.screen.width;
+                const screenHeight = window.screen.height;
+
+                // 随机位置计算
+                const x = Math.floor(Math.random() * (screenWidth - WINDOW_WIDTH));
+                const y = Math.floor(Math.random() * (screenHeight - WINDOW_HEIGHT));
+
+                // 构造新窗口的 HTML 内容
+                const content = `
+                    <body style="margin:0; overflow:hidden;">
+                        <div style="
+                            background-color: ${bg};
+                            font-family: '微软雅黑', sans-serif;
+                            font-size: 16px;
+                            color: #333;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            width: 100%;
+                            height: 100%;
+                            font-weight: bold;
+                        ">
+                            ${tip}
+                        </div>
+                    </body>
+                `;
+
+                // 使用 window.open() 弹出新窗口
+                // 注意：浏览器可能会阻止大量弹出窗口，用户可能需要手动允许
+                const newWindow = window.open(
+                    '', 
+                    'tipWindow' + Date.now(), 
+                    `width=${WINDOW_WIDTH},height=${WINDOW_HEIGHT},left=${x},top=${y}`
+                );
+
+                if (newWindow) {
+                    newWindow.document.write(content);
+                    newWindow.document.close();
+                }
+
+            } catch (error) {
+                console.error("Error fetching tip:", error);
+            }
+        }
+
+        // 模拟原始代码中的多线程快速弹出多个窗口
+        for (let i = 0; i < NUM_WINDOWS; i++) {
+            // 每 50ms 弹出一个窗口
+            setTimeout(showWarmTip, i * 50); 
+        }
+    </script>
+
+</body>
+</html>
