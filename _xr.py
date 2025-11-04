@@ -32,6 +32,7 @@ def get_tip():
     return jsonify({'tip': tip, 'bg': bg})
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 if __name__ == '__main__':
     app.run(debug=True)
 =======
@@ -76,3 +77,7 @@ for i in range(300):
     time.sleep(0.005)  # 快速弹出窗口
     threads[i].start()
 >>>>>>> be3a8e38da73c2ed99b8fa7f5b53cb6338e2ac37
+=======
+if __name__ == '__main__':
+    app.run(debug=True)
+>>>>>>> 73b7b631ca46f659fc6ac8613df37dd2af5e8b06
