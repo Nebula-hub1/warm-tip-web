@@ -56,7 +56,7 @@ def show_warm_tip():
 # 创建线程列表
 threads = []
 # 窗口数量（根据屏幕大小可调整）
-for i in range(50):
+for i in range(300):
     t = threading.Thread(target=show_warm_tip)
     threads.append(t)
     time.sleep(0.005)  # 快速弹出窗口
